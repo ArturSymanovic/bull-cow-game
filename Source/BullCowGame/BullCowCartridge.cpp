@@ -13,3 +13,22 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     ClearScreen();
     FString HiddenWord = TEXT("World");
 }
+
+/*Basic game loop
+1. Generate the isogram with predefined hardcoded word length, 
+   set amount of lives to hardcoded value, 
+2. Display rules, the amount of lives left, number of letters in target isogram.
+---Start guessing loop--- 
+3. If amount of lives is 0 display loosing message and exit the loop
+3. Prompt for a guess
+4. If guess is correct
+    a. Display winning message exit the loop
+5. If guess is not correct
+    a. If entered text is not an isogram or is different length 
+       than the original word display the warning and continue the loop.     
+    b. If entered text is not correct but is in correct format
+       and it is last live display loosing message and exit loop.
+    c. If entered text is not correct but is in correct format
+       calculate and display bulls and cows, reduce lives by 1.  
+---End guessing loop--- 
+*/
