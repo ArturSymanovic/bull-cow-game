@@ -14,6 +14,7 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
 {
+    
     if (bGameOver)
     {
         ClearScreen();
@@ -21,37 +22,7 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     }
     else
     {
-        if (Input == HiddenWord){       
-            PrintLine(TEXT("You have won!"));
-            EndGame();
-        } 
-        else 
-        {
-            if (HiddenWord.Len() !=  Input.Len())
-            {
-                PrintLine(TEXT("The hidden word is %i characters long!\nPlease try again!"), HiddenWord.Len());      
-            }
-            else if (!IsIsogram(Input))
-            {
-                PrintLine(TEXT("The entered word is not an isogram!\nPlease try again!"));
-            }
-            else
-            {        
-                if (Lives > 2)
-                {
-                    PrintLine(TEXT("Wrong! You have got %i lives left!"), --Lives);                    
-                }
-                else if (Lives == 2)
-                {
-                    PrintLine(TEXT("Wrong! You have got only %i live left!"), --Lives);                    
-                }
-                else
-                {
-                    PrintLine(TEXT("Wrong! You have lost!"));
-                    EndGame();
-                }
-            }
-        }        
+        ProcessGuess(Input);                
     }
 }
 
@@ -87,6 +58,37 @@ bool UBullCowCartridge::IsIsogram(const FString& Input)
         }        
     }
     return true;
+}
+
+void UBullCowCartridge::ProcessGuess(const FString& Guess)
+{
+    if (Guess == HiddenWord){       
+        PrintLine(TEXT("Correct! You have won!"));
+        EndGame();
+        return;
+    } 
+
+    if (HiddenWord.Len() !=  Guess.Len())
+    {
+        PrintLine(TEXT("The hidden word is %i characters long!\nPlease try again!"), HiddenWord.Len());      
+        return;
+    }
+
+    if (!IsIsogram(Guess))
+    {
+        PrintLine(TEXT("The entered word is not an isogram!\nPlease try again!"));
+        return;
+    }
+      
+    if (Lives > 1)
+    {
+        PrintLine(TEXT("Wrong! Lives left: %i. Please try another word!"), --Lives);
+        return;                    
+    }
+    
+    PrintLine(TEXT("Wrong! You have lost!"));
+    PrintLine(TEXT("The hidden word is: %s"), *HiddenWord);
+    EndGame();   
 }
 
 

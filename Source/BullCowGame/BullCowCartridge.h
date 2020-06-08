@@ -17,6 +17,7 @@ class BULLCOWGAME_API UBullCowCartridge : public UCartridge
 	void SetupGame();
 	bool IsIsogram(const FString& Input);
 	void EndGame();
+	void ProcessGuess(const FString& Guess);
 
 	// Your declarations go below!
 	private:
