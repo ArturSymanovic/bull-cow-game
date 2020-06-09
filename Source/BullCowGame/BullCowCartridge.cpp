@@ -1,9 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "BullCowCartridge.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
 
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
+    const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
+    FFileHelper::LoadFileToStringArray(WordList, *WordListPath);
+    PrintLine(TEXT("%s"), *WordList[0]);
+    //The below loads only isograms from the file (using predicate)
+    // const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
+    // FFileHelper::LoadFileToStringArrayWithPredicate(
+    //     WordList,
+    //     *WordListPath,
+    //     [this](const FString& Word) { return IsIsogram(Word); });
     
     PrintLine(TEXT("Press [TAB] to enable typing into the terminal..."));
     SetupGame();
@@ -42,11 +53,10 @@ void UBullCowCartridge::EndGame()
     PrintLine(TEXT("Please press [Enter] to play again..."));
 }
 
-
-bool UBullCowCartridge::IsIsogram(const FString& Input)
+bool UBullCowCartridge::IsIsogram(const FString& Input) const
 {
     TMap<TCHAR, int32> temp;
-    for (auto &&cr : Input)
+    for (auto &&cr : Input.ToLower())
     {    
         if (!temp.Contains(cr))
         {
@@ -90,24 +100,3 @@ void UBullCowCartridge::ProcessGuess(const FString& Guess)
     PrintLine(TEXT("The hidden word is: %s"), *HiddenWord);
     EndGame();   
 }
-
-
-
-/*Basic game loop
-1. Generate the isogram with predefined hardcoded word length, 
-   set amount of lives to hardcoded value, 
-2. Display rules, the amount of lives left, number of letters in target isogram.
----Start guessing loop--- 
-3. If amount of lives is 0 display loosing message and exit the loop
-3. Prompt for a guess
-4. If guess is correct
-    a. Display winning message exit the loop
-5. If guess is not correct
-    a. If entered text is not an isogram or is different length 
-       than the original word display the warning and continue the loop.     
-    b. If entered text is not correct but is in correct format
-       and it is last live display loosing message and exit loop.
-    c. If entered text is not correct but is in correct format
-       calculate and display bulls and cows, reduce lives by 1.  
----End guessing loop--- 
-*/
