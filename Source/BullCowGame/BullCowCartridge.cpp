@@ -113,11 +113,36 @@ void UBullCowCartridge::ProcessGuess(const FString& Guess)
       
     if (Lives > 1)
     {
-        PrintLine(TEXT("Wrong! Lives left: %i. Please try another word!"), --Lives);
+        int32 Bulls, Cows;
+        GetBullsAndCows(Guess, Bulls, Cows);
+        PrintLine(TEXT("Wrong! Bulls: %i. Cows: %i. Lives left: %i. Please try again!"), Bulls, Cows, --Lives);
         return;                    
     }
     
     PrintLine(TEXT("Wrong! You have lost!"));
     PrintLine(TEXT("The hidden word is: %s"), *HiddenWord);
     EndGame();   
+}
+
+void UBullCowCartridge::GetBullsAndCows(const FString& Guess, int32& BullCount, int32& CowCount) const
+{
+    BullCount = 0;
+    CowCount = 0;
+    for (int32 GuessIndex = 0; GuessIndex < Guess.Len(); GuessIndex++)
+    {
+        if (Guess[GuessIndex] == HiddenWord[GuessIndex])
+        {
+            ++BullCount;
+            continue;
+        }
+
+        for (int32  HiddenWordIndex = 0; HiddenWordIndex < HiddenWord.Len(); HiddenWordIndex++)
+        { 
+            if (GuessIndex == HiddenWordIndex) continue;
+            if (Guess[GuessIndex] == HiddenWord[HiddenWordIndex])
+            {
+                ++CowCount;
+            }
+        }
+    }    
 }
