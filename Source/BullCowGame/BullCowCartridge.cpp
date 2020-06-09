@@ -2,6 +2,7 @@
 #include "BullCowCartridge.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
+#include "Math/UnrealMathUtility.h"
 
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
@@ -38,7 +39,7 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
 
 void UBullCowCartridge::SetupGame()
 {
-    HiddenWord = TEXT("cake");
+    HiddenWord = WordList[FMath::RandRange(0, WordList.Num()-1)];
     Lives = HiddenWord.Len();
     bGameOver = false;
     PrintLine(TEXT("Welcome to the Bull Cows game!"));
