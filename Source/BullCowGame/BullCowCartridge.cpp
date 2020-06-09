@@ -16,7 +16,8 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     FFileHelper::LoadFileToStringArrayWithPredicate(
         WordList,
         *WordListPath,
-        [this](const FString& Word) { return IsIsogram(Word); });
+        [this](const FString& Word) { return IsLongIsogram(Word); });
+    
     PrintLine(TEXT("Press [TAB] to enable typing into the terminal..."));
     SetupGame();   
 }
@@ -51,10 +52,31 @@ void UBullCowCartridge::EndGame()
     PrintLine(TEXT("Please press [Enter] to play again..."));
 }
 
-bool UBullCowCartridge::IsIsogram(const FString& Input) const
+bool UBullCowCartridge::IsIsogram(const FString& Word) const
 {
     TMap<TCHAR, int32> temp;
-    for (auto &&cr : Input.ToLower())
+    for (auto &&cr : Word.ToLower())
+    {    
+        if (!temp.Contains(cr))
+        {
+            temp.Add(cr, 0);
+        }
+        else
+        {           
+            return false;                
+        }        
+    }
+    return true;
+}
+
+bool UBullCowCartridge::IsLongIsogram(const FString& Word) const
+{
+    if (Word.Len()<4)
+    {
+        return false;
+    }
+    TMap<TCHAR, int32> temp;
+    for (auto &&cr : Word.ToLower())
     {    
         if (!temp.Contains(cr))
         {
