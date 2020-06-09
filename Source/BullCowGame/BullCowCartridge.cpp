@@ -6,21 +6,19 @@
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
-    const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
-    FFileHelper::LoadFileToStringArray(WordList, *WordListPath);
-    PrintLine(TEXT("%s"), *WordList[0]);
-    //The below loads only isograms from the file (using predicate)
-    // const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
-    // FFileHelper::LoadFileToStringArrayWithPredicate(
-    //     WordList,
-    //     *WordListPath,
-    //     [this](const FString& Word) { return IsIsogram(Word); });
-    
-    PrintLine(TEXT("Press [TAB] to enable typing into the terminal..."));
-    SetupGame();
 
-    //PrintLine(FString::Printf(TEXT("The hidden word is %s"), *HiddenWord)); //Debug line
+    // Below loaqds words from a file into a list of FString
+    // const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
+    // FFileHelper::LoadFileToStringArray(WordList, *WordListPath);
     
+    //The below loads only isograms from the file (using predicate and lambda functions)
+    const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
+    FFileHelper::LoadFileToStringArrayWithPredicate(
+        WordList,
+        *WordListPath,
+        [this](const FString& Word) { return IsIsogram(Word); });
+    PrintLine(TEXT("Press [TAB] to enable typing into the terminal..."));
+    SetupGame();   
 }
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
